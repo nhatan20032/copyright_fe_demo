@@ -1,0 +1,22 @@
+﻿[
+  {
+    "outputFile": "wwwroot/css/navbar.css",
+    "inputFile": "wwwroot/css/navbar.less"
+  },
+  {
+    "outputFile": "wwwroot/css/home.css",
+    "inputFile": "wwwroot/css/home.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/hom.css",
+    "inputFile": "wwwroot/css/hom.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/card.css",
+    "inputFile": "wwwroot/css/card.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/login.css",
+    "inputFile": "wwwroot/css/login.scss"
+  }
+]

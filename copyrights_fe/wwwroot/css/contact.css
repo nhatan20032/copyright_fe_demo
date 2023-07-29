@@ -1,0 +1,92 @@
+﻿
+/* Location, Phone, Email Section */
+.contact-list {
+    list-style-type: none;
+    margin-left: -30px;
+    padding-right: 20px;
+    margin-top: 50px;
+}
+
+.list-item {
+    line-height: 4;
+    color: #aaa;
+}
+
+.contact-text {
+    font: 300 18px 'Lato', sans-serif;
+    letter-spacing: 1.9px;
+    color: orangered;
+}
+
+.place {
+    margin-left: 40px;
+}
+
+.phone {
+    margin-left: 36px;
+}
+
+.gmail {
+    margin-left: 33px;
+}
+
+.contact-text a {
+    text-decoration: none;
+    transition-duration: 0.2s;
+    color: orangered;
+}
+/* Social Media Icons */
+.social-media-list {
+    position: relative;
+    font-size: 22px;
+    text-align: center;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+}
+
+    .social-media-list li a {
+        color: #fff;
+    }
+
+    .social-media-list li {
+        position: relative;
+        display: inline-block;
+        height: 60px;
+        width: 60px;
+        margin: 10px 3px;
+        line-height: 60px;
+        border-radius: 50%;
+        color: #fff;
+        background-color: rgb(27,27,27);
+        cursor: pointer;
+        transition: all .2s ease-in-out;
+    }
+
+        .social-media-list li:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            border-radius: 50%;
+            opacity: 0;
+            box-shadow: 0 0 0 1px #fff;
+            transition: all .2s ease-in-out;
+        }
+
+        .social-media-list li:hover {
+            background-color: orangered;
+        }
+
+            .social-media-list li:hover:after {
+                opacity: 1;
+                transform: scale(1.12);
+                transition-timing-function: cubic-bezier(0.37,0.74,0.15,1.65);
+            }
+
+            .social-media-list li:hover a {
+                color: #000;
+            }

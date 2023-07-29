@@ -1,0 +1,36 @@
+﻿/* First Section */
+.first-section {
+    position: relative;
+}
+
+    .first-section .background {
+        height: 550px;
+        width: 100%;
+        z-index: 1;
+    }
+
+    .first-section .texts {
+        position: absolute;
+        display: block;
+        bottom: 120px;
+        width: auto;
+    }
+
+        .first-section .texts p {
+            font-size: 4rem;
+            line-height: 70px;
+            font-weight: 900;
+            color: #fff;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+    .first-section #arrow {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 3;
+    }
+/* End - First Section */

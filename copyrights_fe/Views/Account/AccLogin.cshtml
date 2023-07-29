@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Đăng nhập - Đăng ký";
+    var user = copyrights_fe.App.Comm.GetUser();
+    var phone = copyrights_fe.App.Comm.GetPhone();
+}
+<link rel="stylesheet" href="~/css/login.css" />
+<div class="main-container">
+    <div id="divRegister" class="left-container sign-up hidden">
+        <h1>Đăng ký</h1>
+        <div style="width: 100%;" >
+            <form class="signup-form">
+                <input type="text" id="fullname_reg" name="fullname_reg" required placeholder="Họ và tên">
+                <input type="text" name="username" id="username_reg" required placeholder="Tên đăng nhập">
+                <input type="email" name="email_reg" id="email_reg" required placeholder="E-mail">
+                <input type="password" name="password" id="password_reg" required placeholder="Mật khẩu">
+                <input type="password" name="repassword" id="repassword" required placeholder="Nhập lại mật khẩu"><br />
+                <select id="type_reg" class="form-control">
+                    <option value="guest">Người sử dụng nhạc (Người muốn sử dụng bản quyền nhạc)</option>
+                    <option value="artist">Người cung cấp nhạc (Nhạc sĩ, ca sỹ tự sáng tác)</option>
+                </select>
+                <div class="check">
+                    <input type="checkbox" onclick="checkTerms()" id="agree-terms">
+                    <label for="agree-terms" style="color: black">
+                        Agree to
+                        <a href="#">Terms &amp; Conditions</a>
+                    </label>
+                </div>
+                <button id="register_submit" class="button sign-up-btn disabled" disabled>Đăng ký</button>
+                <div class="sv_error_register"></div>
+            </form>
+        </div>
+        <div class="signin-link-container">
+            <p onclick="changeToLogin()" class="signin-link">Bạn đã có tài khoản? Đăng nhập!</p>
+        </div>
+    </div>
+
+    <div id="divLogin" class="left-container log-in">
+        <h1>Đăng nhập</h1>
+        <div style="width: 100%;">
+            <form class="signup-form">
+                <input type="text" id="username" name="username" required placeholder="Tên đăng nhập">
+                <input type="password" id="password" name="password" required placeholder="Mật khẩu">
+                <button class="button log-in-btn" id="btnLogin" disabled>Đăng nhập</button>
+                <div class="sv_error_register"></div>
+            </form>
+        </div>
+        <div class="login-link-container">
+            <p onclick="changeToSignup()" class="login-link">Bạn không có tài khoản? Đăng ký!</p>
+        </div>
+    </div>
+
+    <div class="right-container"></div>
+</div>
+
+
+<script src="~/js/comm.js"></script>
+<script src="~/js/account/accLogin.js"></script>

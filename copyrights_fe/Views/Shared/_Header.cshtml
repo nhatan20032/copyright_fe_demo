@@ -1,0 +1,49 @@
+﻿@{
+    var user = copyrights_fe.App.Comm.GetUser();
+    var phone = copyrights_fe.App.Comm.GetPhone();
+    var userId = copyrights_fe.App.Comm.GetUserId();
+}
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="https://copyrights.vn/images/logo.png" alt="..." height="36">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item mx-2">
+                    <a class="nav-link active" aria-current="page" href="~/Home/Index">Trang chủ</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link active" aria-current="page" href="~/artist">Nghệ sĩ</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link active" aria-current="page" href="~/contact">Liên hệ</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link active" aria-current="page" href="~/about">Giới thiệu</a>
+                </li>
+                @if(user != null){
+                    <li class="nav-item mx-2 dropdown">
+                        <a class="nav-link dropdown-toggle" href="~/account/thong-tin-ca-nhan" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Hello @user.fullname
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="~/account/thong-tin-ca-nhan">Đăng ký sử dụng</a></li>
+                            <li><a class="dropdown-item" href="#" id="logout_submit">Đăng xuất</a></li>
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item mx-2">
+                        <a class="nav-link active" aria-current="page" href="~/account/thong-tin-ca-nhan">Đăng nhập / Đăng ký</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>

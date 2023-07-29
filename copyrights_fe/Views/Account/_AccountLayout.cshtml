@@ -1,0 +1,60 @@
+﻿@using copyrights_fe.App
+@{
+    ViewData["Title"] = "Thông tin tài khoản";
+}
+@{
+    var user = copyrights_fe.App.Comm.GetUser();
+    var phone = copyrights_fe.App.Comm.GetPhone();
+    var userId = copyrights_fe.App.Comm.GetUserId();
+}
+<style>
+    .account {
+        width: 250px;
+/*        margin-left: 20px;*/
+    }
+
+    .account-menu {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+        .account-menu li {
+            margin-right: 10px;
+        }
+
+            .account-menu li:last-child {
+                margin-right: 0;
+            }
+
+            .account-menu li a {
+                display: inline-block;
+                padding: 5px 10px;
+            }
+</style>
+@if(userId > 0){
+    <link rel="stylesheet" href="~/css/login.css" />
+    <input type="hidden" value="@user" id="usernameComm" />
+    <input type="hidden" value="@user.Id" id="user_id" />
+    <input type="hidden" value="@user.username" id="username" />
+    <input type="hidden" value="@user.type" id="type" />
+
+    <div class="container" style="margin-top: 25px">
+        <h1 class="section-title" style="color: white"> Thông tin tài khoản</h1>
+        <div class="entry-content" style="margin-bottom: 50px; margin-top: 50px" id="tabs">
+            <ul class="account-menu">
+                <li><a href="#tabs-1" class="account btn btn-danger" data-filter="*" onclick="getInfo()">Thông tin tài khoản</a></li>
+                <li class="artist"><a href="#tabs-2" class="account btn btn-danger" data-filter="*" onclick="getListSong()" id="listSongAcc">Danh sách bài hát</a></li>
+                <li class="artist"><a href="#tabs-3" class="account btn btn-danger" data-filter="*" onclick="getReport()">Báo cáo</a></li>
+                <li id="dk" class="guest"><a href="#tabs-6" class="account btn btn-danger" data-filter="*" onclick="getAllSong()" id="listAllSong">Đăng ký sử dụng bài hát</a></li>
+            </ul>
+            <div id="tabs-1"></div>
+            <div id="tabs-2"></div>
+            <div id="tabs-3"></div>
+            <div id="tabs-6"></div>
+        </div>
+    </div>
+}

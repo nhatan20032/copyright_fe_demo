@@ -1,0 +1,360 @@
+﻿@model copyrights_fe.Model.film_cp_extend
+@{
+    var vw_film_cp = Model.vw_film_cp;
+    var list_vwfilm_video = Model.list_film_video;
+    if (vw_film_cp != null)
+    {
+        ViewData["title"] = vw_film_cp?.title;
+        ViewData["desc"] = vw_film_cp?.title;
+    }
+}
+<style>
+
+
+    * {
+        font-family: 'Montserrat', sans-serif;
+        box-sizing: border-box;
+        /*   border: 1px solid white; */
+    }
+
+    body {
+        background-color: #121212;
+        color: #fff;
+    }
+    /*=============Estilos de texto ===================*/
+
+    h1 {
+        color: #E5E5E5;
+        font-weight: bold;
+        font-size: 80px;
+        line-height: 80px;
+    }
+
+    h3 {
+        color: #E5E5E5;
+        font-weight: regular;
+        font-size: 18px;
+        line-height: 24px;
+    }
+
+    p {
+        color: #E5E5E5;
+        font-weight: regular;
+        font-size: 16px;
+        line-height: 18px;
+    }
+
+    /*============= Botones ===================*/
+    .button {
+        border: 1px solid #fffff;
+        padding: 16px 16px; /*espacio alrededor texto*/
+        background-color: #ffffff; /*color botón*/
+        color: #2e2e2e; /*color texto*/
+        text-decoration: none; /*decoración texto*/
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 50px; /*bordes redondos*/
+        margin-right: 16px;
+        transition-duration: .5s;
+    }
+
+        .button:hover {
+            color: White;
+            background-color: #ED2E39;
+        }
+
+    .button--secondary {
+        border: 2px solid white;
+        padding: 16px 16px; /*espacio alrededor texto*/
+        background-color: rgba(255, 255, 255, 0.2); /*color botón */
+        color: #ffffff; /*color texto*/
+        text-decoration: none; /*decoración texto*/
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 50px; /*bordes redondos*/
+        margin-right: 16px;
+        transition-duration: .3s;
+    }
+
+        .button--secondary:hover {
+            color: Black;
+            background-color: White;
+        }
+
+    /*=============                  1440                ===================*/
+
+    /*=============Componente header===================*/
+
+    .header--column {
+        display: inline-block;
+        grid-area: header--column;
+        align-self: center;
+    }
+
+        .header--column:last-of-type a {
+            float: right;
+        }
+
+    .column--button {
+        display: inline-block;
+        width: auto;
+        margin-right: 32px;
+    }
+
+        .column--button:first-of-type {
+            margin-left: 40px;
+        }
+
+    .header--column a {
+        font-size: 16px;
+        color: white;
+        text-decoration: none;
+    }
+
+        .header--column a.logo {
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-right: 40px;
+        }
+
+
+
+    /*============= Artist info===================*/
+
+    .artist--type {
+        display: flex;
+        flex-direction: column;
+        height: 500px;
+        width: 100%;
+        max-width: 1440;
+        background-image: url("@vw_film_cp.thumb_file");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: 20% 100%;
+        background-attachment: fixed;
+        padding: 0 80px;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+    }
+
+        .artist--type::before {
+            content: "";
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-image: linear-gradient(to bottom, rgba(58, 58, 58, 0), #131010);
+            z-index: -1;
+        }
+
+
+    .info--artist {
+        margin-top: 120px;
+        margin-bottom: 0px;
+        /*       background-color: pink; */
+    }
+
+    .info--name {
+        margin-top: 0px;
+        margin-bottom: 16px;
+        /*       background-color: pink; */
+    }
+
+    .info--suscribers {
+        margin-top: 16px;
+        margin-bottom: 0px;
+        font-weight: regular;
+        /*       background-color: pink; */
+    }
+
+    .artist--subscription {
+        display: inline-block;
+        width: auto;
+        margin-top: 48px;
+        margin-bottom: 0px;
+        margin-right: 16px;
+        /*            background-color: pink; */
+    }
+
+
+
+    .tabs {
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        height: 0px;
+        max-width: 1440;
+        margin-top: 120px;
+        background-color: blue;
+    }
+
+
+    .tabs--links {
+        display: inline-block;
+        font-size: 0;
+        /*       background-color: pink; */
+        margin-right: 32px;
+    }
+
+        .tabs--links a {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            opacity: 50%;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition-duration: .2s;
+            position: relative;
+        }
+
+            .tabs--links a::after {
+                content: "";
+                display: inline-block;
+                width: 0%;
+                height: 3px;
+                background-color: white;
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 140%;
+                margin: auto;
+                border-radius: 100px;
+                transition-duration: .2s;
+            }
+
+            .tabs--links a.active {
+                opacity: 100%;
+            }
+
+                .tabs--links a.active::after {
+                    width: 50%;
+                }
+
+
+            .tabs--links a:hover {
+                opacity: 100%;
+                cursor: pointer;
+            }
+
+                .tabs--links a:hover::after {
+                    width: 50%;
+                }
+
+    #gioi-thieu {
+        margin-top: 50px;
+        margin-bottom: 50px; /* tạo khoảng cách dưới phần tử "Giới thiệu" */
+    }
+
+    #bai-hat {
+        margin-top: 50px;
+        margin-bottom: 50px; /* tạo khoảng cách dưới phần tử "Giới thiệu" */
+    }
+
+    #tracks-container {
+        display: flex;
+        margin-top: 70px;
+        flex-direction: column;
+    }
+
+    .track {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        background: none;
+        border: none;
+    }
+
+    .track-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-left: 10px;
+    }
+
+    .item-title-main {
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .item-byline {
+        font-size: 14px;
+        color: #777;
+    }
+
+    .track-no {
+        font-size: 14px;
+        color: white;
+        margin-right: 10px;
+        width: 30px;
+        text-align: right;
+    }
+    .track-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.track-no {
+  width: 30px;
+  text-align: right;
+  margin-right: 10px;
+}
+
+</style>
+<div class="artist--type">
+    <h3 class="info--artist">
+        Artist
+    </h3>
+    <h1 class="info--name">
+        @vw_film_cp.shortname
+    </h1>
+    <!-- ================ tabs artist --------------->
+
+    <div class="tabs">
+        <div class="tabs--links">
+            <a href="#gioi-thieu" class="active">
+                Giới thiệu
+            </a>
+        </div>
+
+        <div class="tabs--links">
+            <a href="#bai-hat">
+                Bài hát
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<div id="container" class="container">
+    <div id="gioi-thieu">
+        <h2> Tiểu sử </h2>
+        @vw_film_cp.desc
+    </div>
+    <div id="bai-hat" style="display: none;">
+        <h2>Danh sách bài hát</h2>
+        <div id="tracks-container">
+            @for (int i = 0; i <= list_vwfilm_video.Count - 1; i++)
+            {
+                if (list_vwfilm_video[i].showhome == 0)
+                {
+                    continue;
+                }
+                var stt = i + 1;
+                <div class="group track">
+                    <div class="track-info">
+                        <p class="item-title-main">@list_vwfilm_video[i].title</p>
+                        <p class="item-byline">@list_vwfilm_video[i].desc &nbsp;</p>
+                    </div>
+                    <span class="track-no">@stt</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>

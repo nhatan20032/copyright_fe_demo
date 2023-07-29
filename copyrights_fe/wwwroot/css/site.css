@@ -1,0 +1,63 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    color: #fff;
+}
+body {
+    margin-bottom: 60px;
+}
+/*
+----------------------------
+Artist_Infor
+----------------------------
+*/
+/*@media only screen and (max-width: 768px) {
+
+    .header--column:first-of-type {
+        grid-area: header--columnA;
+    }
+
+    .header--column:last-of-type {
+        grid-area: header--columnB;
+        display: none;
+    }
+
+    .header--column:last-of-type a {
+        float: none;
+    }
+
+    .column--button {
+        display: inline-block;
+        width: 100%;
+        visibility: hidden;
+        margin: 0;
+    }
+
+        .column--button:first-of-type {
+            margin-left: 0;
+        }
+}
+*/
+
+#container-contact{
+    margin-bottom: 50px;
+    margin-top: 50px;
+}

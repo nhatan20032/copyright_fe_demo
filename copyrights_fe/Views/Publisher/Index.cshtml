@@ -1,0 +1,162 @@
+﻿@model List<copyrights_fe.Model.vw_film_cp>
+
+@{
+    ViewData["Title"] = "Danh sách nghệ sĩ";
+    var _catalogSV = new copyrights_fe.Services.CatalogService();
+    var listCatalog = _catalogSV.GetViewAll();
+    var lstAll = new copyrights_fe.Services.film_cpServices().GetAllViewItem(null);
+    List<vw_film_cp> artistSV = lstAll.OrderBy(o => o.stt).ToList();
+}
+<style>
+
+    #pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+        #pagination button {
+            background-color: #fff;
+            border: none;
+            color: #333;
+            font-size: 16px;
+            padding: 8px 12px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+            #pagination button:hover {
+                background-color: orangered;
+                color: #fff;
+            }
+
+            #pagination button.active {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+        #pagination span {
+            font-size: 16px;
+            color: #333;
+            margin: 0 5px;
+        }
+        
+        #pagination button.current {
+            background-color: #000000; /* đổi màu nền thành màu đen */
+            color: #ffffff; /* đổi màu chữ thành màu trắng */
+        }
+</style>
+<div class="container" style="margin-top: 50px">
+    <h1 style="color: white">Danh sách nghệ sĩ</h1>
+    @*<div id="gallery" class="container-fluid">
+    @for (int i = 0; i <= artistSV.Count - 1; i++)
+    {
+    var link = copyrights_fe.Services.Utilities.CommService.artistInfoUrl(artistSV[i].shortname);
+    var shortname = @artistSV[i].shortname;
+    var job = artistSV[i].country_title;
+    var status = @artistSV[i].status;
+    var stt = @artistSV[i].stt;
+    if (shortname == "Quốc tế" || status <= 0 || stt <= 0 || shortname.Contains("hangphim"))
+    {
+    continue;
+    }
+    <img src="@artistSV[i].thumb_file" class="img-responsive">
+    }
+    </div>*@
+    <div id="gallery" class="container-fluid" >
+        <a href="/artist/binz"><img src="https://hcmuni.fpt.edu.vn/Data/Sites/1/News/6599/tri_2671.jpg" class="img-responsive"></a>
+        <img src="https://source.unsplash.com/1024x768?female,portrait" class="img-responsive">
+        <img src="https://source.unsplash.com/1366x768?female,portrait" class="img-responsive">
+        <img src="https://source.unsplash.com/1920x1080?female,portrait" class="img-responsive">
+        <img src="https://source.unsplash.com/640x360?female,portrait" class="img-responsive">
+        <img src="https://source.unsplash.com/320x640?female,portrait" class="img-responsive">
+        <img src="https://source.unsplash.com/1200x1600?female,portrait" class="card img-responsive">
+        <img src="https://source.unsplash.com/800x600?female,portrait" class="img-responsive">
+        <img src="https://source.unsplash.com/600x800?female,portrait" class="img-responsive">
+        <img src="https://source.unsplash.com/400x600?female,portrait" class="img-responsive">
+        <img src="https://source.unsplash.com/600x400?female,portrait" class="img-responsive">
+        <img src="https://source.unsplash.com/1100x1600?female,portrait" class="img-responsive">
+        <img src="https://source.unsplash.com/1600x1100?female,portrait" class="img-responsive">
+        <img src="https://source.unsplash.com/992x768?female,portrait" class="img-responsive">
+        <img src="https://source.unsplash.com/768x992?female,portrait" class="img-responsive">
+    </div>
+    <div id="pagination">
+        <button id="prev">Previous</button>
+        <span id="page-numbers"></span>
+        <button id="next">Next</button>
+    </div>
+</div>
+<script>
+    var gallery = document.getElementById("gallery");
+    var itemsPerPage = 10;
+    var currentPage = 1;
+
+    function showPage(page) {
+        var startIndex = (page - 1) * itemsPerPage;
+        var endIndex = startIndex + itemsPerPage;
+        var images = gallery.getElementsByTagName("img");
+        for (var i = 0; i < images.length; i++) {
+            if (i >= startIndex && i < endIndex) {
+                images[i].style.display = "block";
+            } else {
+                images[i].style.display = "none";
+            }
+        }
+    }
+    function createPagination() {
+        var numPages = Math.ceil(gallery.getElementsByTagName("img").length / itemsPerPage);
+        var pagination = document.getElementById("pagination");
+
+        var prevButton = document.getElementById("prev");
+        prevButton.addEventListener("click", function () {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+                updatePagination(); // cập nhật trạng thái "current" cho nút phân trang
+            }
+        });
+
+        var nextButton = document.getElementById("next");
+        nextButton.addEventListener("click", function () {
+            if (currentPage < numPages) {
+                currentPage++;
+                showPage(currentPage);
+                updatePagination(); // cập nhật trạng thái "current" cho nút phân trang
+            }
+        });
+
+        var pageNumbers = document.getElementById("page-numbers");
+        for (var i = 1; i <= numPages; i++) {
+            var button = document.createElement("button");
+            button.innerHTML = i;
+            button.addEventListener("click", function () {
+                currentPage = parseInt(this.innerHTML);
+                showPage(currentPage);
+                updatePagination(); // cập nhật trạng thái "current" cho nút phân trang
+            });
+            pageNumbers.appendChild(button);
+        }
+
+        pagination.insertBefore(pageNumbers, nextButton);
+        pagination.insertBefore(prevButton, pageNumbers);
+
+        updatePagination(); // cập nhật trạng thái "current" cho nút phân trang ban đầu
+    }
+
+    function updatePagination() {
+        var numPages = Math.ceil(gallery.getElementsByTagName("img").length / itemsPerPage);
+        var pageNumbers = document.getElementById("page-numbers");
+        var buttons = pageNumbers.getElementsByTagName("button");
+        for (var i = 0; i < buttons.length; i++) {
+            if (parseInt(buttons[i].innerHTML) === currentPage) {
+                buttons[i].classList.add("current"); // thêm class "current" cho nút phân trang hiện tại
+            } else {
+                buttons[i].classList.remove("current"); // xóa class "current" trên các nút phân trang khác
+            }
+        }
+    }
+
+    showPage(currentPage);
+    createPagination(); 
+</script>

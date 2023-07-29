@@ -1,0 +1,1045 @@
+﻿@using Acs_Lala.Services;
+@model List<copyrights_fe.Model.vw_film_video>
+@{
+    ViewData["Title"] = "AccListSong";
+}
+@if (Model.Count < 1)
+{
+    <h4>Không có bài hát nào</h4>
+}
+else
+{
+    <style>
+        .my-form label {
+            font-weight: bold;
+        }
+
+        .my-form input[type="text"],
+        .my-form input[type="email"],
+        .my-form input[type="tel"],
+        .my-form input[type="url"],
+        .my-form select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+            .my-form input[type="text"]:focus,
+            .my-form input[type="email"]:focus,
+            .my-form input[type="tel"]:focus,
+            .my-form input[type="url"]:focus,
+            .my-form select:focus {
+                border: 2px solid #5cb85c;
+            }
+
+        .my-form .sv_error {
+            color: red;
+            margin-bottom: 10px;
+        }
+
+        .my-form .btn-group {
+            margin-top: 20px;
+        }
+
+        .my-form .btn-success {
+            background-color: #5cb85c;
+            color: #fff;
+        }
+
+            .my-form .btn-success:hover {
+                background-color: #449d44;
+            }
+
+        .my-form hr {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+        label.form-check-label {
+            margin-left: 25px;
+        }
+        button.swal2-close {
+            color: red;
+        }
+        .swal2-content {
+            text-align: left;
+        }
+
+        span.multiselect-native-select .btn-group {
+            width: 100%;
+        }
+
+        mark {
+            padding: 0;
+            background: #f1c40f;
+        }
+
+        #tblAllSong_length label{
+            color: white;
+            text-align: left;
+        }
+
+        #tblAllSong_length select{
+            color: orangered;
+        }
+
+        #tblAllSong_info{
+            color: white;
+        }
+        #tblAllSong_paginate{
+            color: white;
+        }
+        #tblAllSong thead input[type="text"]::placeholder {
+            color: wheat;
+            font-style: italic;
+            font-size: 90%;
+        }
+
+        #tblAllSong thead input {
+            padding: 5px !important;
+        }
+
+        input[type=search] {
+            display: none;
+        }
+
+        :required {
+            background: url(/images/asterisk_red.png) no-repeat;
+            background-position: 99% top;
+            background-size: 10px 10px;
+        }
+
+        #frmReg b {
+            display: none;
+        }
+        #tblAllSong{
+            background-color: orangered;
+        }
+    </style>
+    <div class="loader loader-default"></div>
+    <section>
+        <div class="row">
+            <div class="col-md-12">
+                <h3 id="mgs"></h3>
+                <table class="table table-striped table-dark" id="tblAllSong">
+                    <thead>
+                        <tr>
+                            <th>Bài hát</th>
+                            <th>Tác giả - Nghệ sỹ</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var obj_register = new film_resgiterService().GetInfo(0, int.Parse(ViewData["userid"].ToString()), 0, "", "", "", "", "", "");
+                            for (int i = 0; i <= Model.Count - 1; i++)
+                            {
+                                bool check_hide = false;
+                                if (Model[i].showhome <= 0)
+                                {
+                                    continue;
+                                }
+                                if (Model[i].status <= 0)
+                                {
+                                    check_hide = true;
+                                    //continue;
+                                }
+                                var img = !string.IsNullOrEmpty(@Model[i].thumb_file) ? @Model[i].thumb_file : "/images/noimage.png";
+                                var id = Model[i].Id;
+                                var title = Model[i].title;
+                                var cpid = Model[i].cpid;
+                                var status = Model[i].status;
+                                var cptitle = Model[i].cpid_title;
+                                int reg_id = 0;
+
+                                    <tr id="@id">
+                                        <td>@title</td>
+                                        <td>@cptitle</td>
+                                        <td>
+                                            @{
+                                            var kq = "";
+                                            var btn = "";
+                                            var link_video = "";
+                                            var btnId = 0;
+                                            if (obj_register.Count > 0)
+                                            {
+                                                foreach (var item in obj_register)
+                                                {
+                                                    if (item.videoid == id)
+                                                    {
+                                                        var thoigiandk = item.time;
+                                                        var ngaybatdau = item.date_start;
+                                                        link_video = item.link_video;
+                                                        var ngayhethan = ngaybatdau.AddMonths((int)thoigiandk * 12);
+                                                        {
+                                                            var status1 = "";
+                                                            if (item.status == "Chưa kích hoạt" || item.status == "Đã gửi biên bản")
+                                                            {
+                                                                btn = "aaaaaa";
+                                                                btnId = item.id;
+                                                                status1 = "";
+                                                            }
+                                                            if (item.status == "Xác nhận đã thanh toán")
+                                                            {
+                                                                status1 = " - Chưa kích hoạt";
+                                                            }
+                                                            if (!string.IsNullOrEmpty(item.link_video))
+                                                            {
+                                                                if (item.status == "Đã kích hoạt" || item.status == "Xác nhận đã thanh toán")
+                                                                {
+                                                                    if (!string.IsNullOrEmpty(item.state) && item.state.ToLower().Contains("xóa") || (!string.IsNullOrEmpty(item.note) && item.note.ToLower().Contains("xóa")))
+                                                                    {
+                                                                        kq = " ";
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        kq = $"Ngày hết hạn {ngayhethan.ToString("dd/MM/yyyy")} {status1}";
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    kq = " ";
+                                                                }
+
+                                                            }
+                                                            else
+                                                            {
+                                                                kq = "Cập nhật";
+                                                                reg_id = item.id;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+                                            if (string.IsNullOrEmpty(kq))
+                                            {
+                                                        <button title="Đăng ký mới một nền tảng" class="btn btn-secondary" id="btnReg" data-id="@id" data-cpid="@cptitle" data-title="@title" data-hide="@check_hide">Đăng ký</button>
+                                            }
+                                            else
+                                            {
+
+                                                if (kq == "Cập nhật")
+                                                {
+                                                            <button class="btn btn-warning" id="btnReg" data-id="@id" data-reg="@reg_id" data-cpid="@cptitle" data-title="@title">Cập nhật</button>
+                                                }
+                                                else
+                                                {
+                                                    if (string.IsNullOrEmpty(link_video))
+                                                    {
+                                                                <button class="btn btn-warning" id="btnReg" data-id="@id" data-reg="@reg_id" data-cpid="@cptitle" data-title="@title">Cập nhật</button>
+                                                    }
+                                                            <button title="Đăng ký thêm link hoặc nền tảng khác" class="btn btn-secondary" id="btnReg" data-id="@id" data-cpid="@cptitle" data-title="@title" data-hide="@check_hide">Thêm nền tảng</button>
+                                                            @kq
+                                                    link_video = "";
+                                                }
+                                            }
+
+
+                                            if (!string.IsNullOrEmpty(btn))
+                                            {
+                                                        <a title="Bấm vào đây để xác nhận đã thanh toán" id='btnConfirm' data-id='@btnId'><i class="fa fa-check"></i> Xác nhận thanh toán</a>
+                                            }
+                                            }
+                                        </td>
+                                    </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <script>
+        $(document).ready(function () {
+            let isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
+            const formatYmd = date => date.toISOString().slice(0, 10);
+            let count_col = 1;
+            let arrId = ["bh", "tg", ""];
+            $('thead th').each(function () {
+                var title = $(this).text();
+                var id = arrId[count_col];
+                if (count_col < 3) {
+                    $(this).html(`<input id="${id}" type="text" placeholder="Tìm kiếm theo ${title}" />`);
+                }
+                count_col++;
+            });
+            var current_reg_id;
+            $('#mgs').html('Đang tải dữ liệu...');
+            var tableSong = $('#tblAllSong').dataTable({
+                "language": {
+                    'searchPlaceholder': "Tìm kiếm",
+                    "sProcessing": "Đang xử lý...",
+                    "sLengthMenu": "Xem _MENU_ mục",
+                    "sZeroRecords": "Không tìm thấy dòng nào phù hợp",
+                    "sInfo": "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                    "sInfoEmpty": "Đang xem 0 đến 0 trong tổng số 0 mục",
+                    "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+                    "sInfoPostFix": "",
+                    "sSearch": "",
+                    "sUrl": "",
+                    "oPaginate": {
+                        "sFirst": "Đầu",
+                        "sPrevious": "Trước",
+                        "sNext": "Tiếp",
+                        "sLast": "Cuối"
+                    }
+                },
+                orderable: false,
+                initComplete: function () {
+                    // Apply the search
+                    this.api().column(0).every(function () {
+                        $('input', this.header()).on('keyup change clear', function () {
+                            tableSong.fnFilter('^' + this.value, 0, true, true, true, true);
+                        });
+                    });
+                    this.api().column(1).every(function () {
+                        $('input', this.header()).on('keyup change clear', function () {
+                            tableSong.fnFilter('^' + this.value, 1, true, true, true, true);
+                        });
+                    });
+                }
+            });
+            $('#mgs').html('');
+            var days = function (month) {
+                return new Date(new Date().getFullYear(), month, 0).getDate();
+            };
+            $(document).on({
+                change: function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    switch ($(this).val()) {
+                        case "no":
+                            // Chưa phát hành
+                            $('#cbFlag').attr("disabled", true);
+                            $('#txtLink').removeAttr("required");
+                            $('#txtChannel').removeAttr("required");
+                            $('#txtChannelLink').removeAttr("required");
+                            $('#txtLink').attr("disabled", false);
+                            $('#txtTime').attr("disabled", false);
+                            $('#txtDate').attr("disabled", false);
+                            $('#txtDateStart').attr("disabled", false);
+                            $('#ngayph').parent().attr('title', 'Ngày dự kiến phát hành video lên các nền tảng mạng xã hội');
+                            $('#ngayph').html('Ngày dự kiến phát hành video<b style="color:red">(*)</b> <i class="fa fa-question-circle" aria-hidden="true"></i>');
+                            $('#linkvideo th').html('Link video');
+                            $('#tenkenh th').html('Tên kênh');
+                            $('#linkkenh th').html('Link kênh');
+                            // Show/hide trường cần thiết
+                            $('#datestart').show();
+                            $('#txtFlag').val("");
+                            $('#thoigiandk').show();
+                            $('#txtDateStart').removeAttr('disabled');
+                            break;
+                        case "del":
+                            // Đã phát hành + xóa video
+                            $('#cbFlag').attr("disabled", false);
+                            $('#txtLink').attr("required", "required");
+                            $('#txtChannel').attr("required", "required");
+                            $('#txtChannelLink').attr("required", "required");
+                            $('#txtLink').attr("disabled", false);
+                            $('#txtDateStart').attr("disabled", true);
+                            $('#txtTime').attr("disabled", true);
+                            $('#txtTime').val("1").trigger('change');
+                            $('#txtDate').attr("disabled", false);
+                            $('#ngayph').parent().attr('title', 'Ngày video đã phát hành');
+                            $('#ngayph').html('Ngày video đã phát hành<b style="color:red">(*)</b>');
+                            $('#linkvideo th').html('Link video <b style="color:red">(*)</b>');
+                            $('#tenkenh th').html('Tên kênh <b style="color:red">(*)</b>');
+                            $('#linkkenh th').html('Link kênh <b style="color:red">(*)</b>');
+                            // Show/hide trường cần thiết
+                            $('#datestart').hide();
+                            $('#thoigiandk').hide();
+                            $('#txtDateStart').removeAttr('disabled');
+                            break;
+                        default:
+                            // Đã phát hành + tiếp tục sử dụng
+                            $('#cbFlag').attr("disabled", false);
+                            $('#txtLink').attr("required", "required");
+                            $('#txtChannel').attr("required", "required");
+                            $('#txtChannelLink').attr("required", "required");
+                            $('#txtLink').attr("disabled", false);
+                            $('#txtTime').attr("disabled", false);
+                            $('#txtDate').attr("disabled", false);
+                            $('#txtDateStart').attr("disabled", false);
+                            $('#linkvideo th').html('Link video <b style="color:red">(*)</b>');
+                            $('#tenkenh th').html('Tên kênh <b style="color:red">(*)</b>');
+                            $('#linkkenh th').html('Link kênh <b style="color:red">(*)</b>');
+                            // Show/hide trường cần thiết
+                            $('#datestart').show();
+                            $('#thoigiandk').show();
+                            $('#txtDateStart').attr('disabled', true);
+                            break;
+                    }
+                    $('#txtLink').val("");
+                    $('#txtChannel').val("");
+                    $('#txtChannelLink').val("");
+                }
+            }, '#txtRelease');
+            $(document).on({
+                click: function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    let reg_id = $(this).data('id');
+                    $.ajax({
+                        url: "/film_register/update_status?id=" + reg_id + "&status=Xác nhận đã thanh toán",
+                        method: "get",
+                        success: function (a) {
+                            Swal.fire(
+                                'Thành công!',
+                                'Bạn đã xác nhận thông tin thanh toán, chúng tôi sẽ kiểm tra và phản hồi lại bạn trong thời gian sớm nhất.',
+                                'success'
+                            )
+                            $('#tblAllSong tbody').html('');
+                            $('#listAllSong').trigger('click');
+                            check_click = 0;
+                        },
+                        error: function (a) { console.log(a.responseText) }
+                    });
+                }
+            }, '#btnConfirm');
+
+            $('#txtRelease').trigger('change');
+
+
+            //$(document).on({
+            //    submit: function (e) {
+            //        e.stopPropagation();
+            //        e.preventDefault();
+            //        e.stopImmediatePropagation();
+
+            //    }
+            //}, '#btnUpdate');
+            let submit_func = "add";
+            $(document).on({
+                submit: function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    debugger;
+                    if (submit_func == "update") {
+                        let obj = {
+                            'id': current_reg_id,
+                            'link_video': $('#txtLink').val(),
+                            'link_channel': $('#txtChannelLink').val(),
+                            'channel': $('#txtChannel').val(),
+                        };
+                        console.log(obj);
+                        //return;
+                        $.ajax({
+                            url: "/film_register/UpdateLink",
+                            method: "post",
+                            data: {
+                                obj: obj
+                            },
+                            success: function (a) {
+                                Swal.fire(
+                                    'Cập nhât thông tin thành công!',
+                                    '',
+                                    'success'
+                                )
+                                $('#tblAllSong tbody').html('');
+                                $('#listAllSong').trigger('click');
+                            },
+                            error: function (a) { console.log(a.responseText) }
+                        });
+                        return false;
+                    }
+                    let channel = $('#txtChannel').val();
+                    let channelLink = $('#txtChannelLink').val();
+                    let release = $('#txtRelease').val();
+                    let link = $('#txtLink').val();
+                    let email = $('#txtEmail').val();
+                    let address = $('#txtAddress').val();
+                    let phone = $('#txtPhone').val();
+                    let name = $('#txtName').val();
+                    let cmt = $('#txtCmt').val();
+                    let report_status = 11;
+                    switch (release) {
+                        case "no":
+                            // Chưa phát hành video
+                            report_status = 14;
+                            $('#cbFlag').attr("disabled", true);
+                            $('#txtTime').attr("disabled", false);
+                            $('#txtDate').attr("disabled", false);
+                            if ($('#txtDate').val().length <= 0) {
+                                $('#txtDate').focus();
+                                return false;
+                            } else {
+                                let date = new Date($('#txtDate').val());
+                                let date_start = new Date($('#txtDateStart').val());
+                                let today = new Date();
+                                console.log(date_start.getMonth());
+                                console.log(date.getMonth());
+                                console.log(date_start.getDate());
+                                console.log(date.getDate());
+                                debugger;
+                                if (date.getMonth() == today.getMonth() && date.getDate() < today.getDate()) {
+                                    $('.sv_error').html('<i class="fa fa-exclamation-triangle"></i> Ngày dự kiến phát hành video phải lớn hơn hoặc bằng ngày hiện tại');
+                                    return false;
+                                }
+                                else {
+                                    $('.sv_error').html('');
+                                }
+                                if (date_start.getMonth() == date.getMonth() && date.getDate() < date_start.getDate()) {
+                                    $('.sv_error').html('<i class="fa fa-exclamation-triangle"></i> Ngày dự kiến phát hành video phải lớn hơn hoặc bằng ngày của giá trị hợp đồng');
+                                    return false;
+                                }
+                                else {
+                                    $('.sv_error').html('');
+                                }
+                                if (date_start.getMonth() > date.getMonth()) {
+                                    $('.sv_error').html('<i class="fa fa-exclamation-triangle"></i> Ngày dự kiến phát hành video phải lớn hơn hoặc bằng ngày của giá trị hợp đồng');
+                                    return false;
+                                }
+                                else {
+                                    $('.sv_error').html('');
+                                }
+                                if (date_start > date) {
+                                   $('.sv_error').append(' <br /><i class="fa fa-exclamation-triangle"></i> Ngày của giá trị hợp đồng phải nhỏ hơn hoặc bằng ngày mà bạn dự kiến phát hành video.');
+                                    return false;
+                                }else{
+                                    $('.sv_error').html('');
+                                }
+                            }
+                            console.log(!ValidateEmail(email));
+                            if (email.length <= 0 || !ValidateEmail(email)) {
+                                $('#txtEmail').focus();
+                                return false;
+                            }
+                            break;
+                        case "del":
+                            // Đã phát hành và xóa video
+                            if ($('#txtFlag').val() != "") {
+                                // Đã cắm cờ
+                                report_status = 1;
+                            } else {
+                                // Không cắm cờ và xóa video
+                                report_status = 5;
+                            }
+                            $('#cbFlag').attr("disabled", false);
+                            $('#txtTime').attr("disabled", true);
+                            $('#txtDate').attr("disabled", true);
+                            break;
+                        default:
+                            // Đã phát hành và tiếp tục sử dụng
+                            if ($('#txtFlag').val() != "") {
+                                // Đã cắm cờ
+                                report_status = 1;
+                            } else {
+                                // Không cắm cờ và tiếp tục sử dụng
+                                report_status = 11;
+                            }
+                            $('#cbFlag').attr("disabled", false);
+                            $('#txtTime').attr("disabled", false);
+                            $('#txtDate').attr("disabled", false);
+                            if (link.length <= 0) {
+                                $('#txtLink').focus();
+                                return false;
+                            }
+                            if (channel.length <= 0) {
+                                $('#txtChannel').focus();
+                                return false;
+                            }
+                            if (channelLink.length <= 0) {
+                                $('#txtChannelLink').focus();
+                                return false;
+                            }
+
+                            debugger;
+                            // Check ngày đã phát phải nhỏ hơn ngày hiện tại
+                            if ($('#txtDate').val().length <= 0) {
+                                $('#txtDate').focus();
+                                return false;
+                            } else {
+                                let d1 = Date.parse(new Date($('#txtDate').val()));
+                                let d2 = Date.parse(new Date());
+                                console.log(d1);
+                                console.log(d2);
+                                if (d1 > d2) {
+                                    $('.sv_error').html('<i class="fa fa-exclamation-triangle"></i> Ngày video đã phát hành phải nhỏ hơn hoặc bằng ngày hiện tại');
+                                    return false;
+
+                                } else {
+                                    $('.sv_error').html('');
+                                }
+                            }
+                            console.log(!ValidateEmail(email));
+                            if (email.length <= 0 || !ValidateEmail(email)) {
+                                $('#txtEmail').focus();
+                                return false;
+                            }
+                            break;
+                    }
+                    if (phone.length <= 0) {
+                        $('#txtPhone').focus();
+                        return false;
+                    }
+
+                    let obj = {
+                        'title': $('#txtTitle').val(),
+                        'videoid': $('#txtVideoid').val(),
+                        'channel': $('#txtChannel').val(),
+                        'link_video': $('#txtLink').val(),
+                        'link_channel': $('#txtChannelLink').val(),
+                        'channel': $('#txtChannel').val(),
+                        'date': $('#txtDate').val(),
+                        'time': $('#txtTime').val(),
+                        'email': $('#txtEmail').val(),
+                        'address': $('#txtAddress').val(),
+                        'source': $('#txtSource').val(),
+                        'userid': localStorage.getItem('userid') || 1,
+                        'payment': $('#txtPayment').val(),
+                        'note': $('#txtNote').val(),
+                        'status': 'Chưa kích hoạt',
+                        'cptitle': $('#txtCpid').val(),
+                        'phone': $('#txtPhone').val(),
+                        'name': $('#txtName').val(),
+                        'cmt': $('#txtCmt').val(),
+                        'state': report_status,
+                        'date_start': $('#txtDateStart').val(),
+                        'date_end': $('#txtDateEnd').val(),
+                        'date_camco': $('#txtFlag').val(),
+                    }
+                    console.log(obj);
+                    let text = release == "no" ? "Video chưa phát hành nên sau khi hoàn tất thủ tục đăng ký và thanh toán, bạn vui lòng cập nhật thông tin cho video qua email hoặc cập nhật tại trang quản lý này" : "";
+                    Swal.fire({
+                        title: "Bạn chắc chắn muốn đăng ký",
+                        text: text,
+                        showDenyButton: true,
+                        //showCancelButton: true,
+                        confirmButtonText: `Đăng ký`,
+                        denyButtonText: `Hủy`,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            submit_func = "add";
+                            $('.loader').addClass("is-active");
+                            $('#btnGiaHan').after(' <i class="fa fa-spinner fa-spin" style="font-size:24px"></i> Đang đăng ký...');
+                            $.ajax({
+                                url: '/film_register/update',
+                                method: 'post',
+                                data: {
+                                    obj: obj
+                                },
+                                success: function (data) {
+                                    console.log(data);
+                                    $('.loader').removeClass("is-active");
+                                    if (data > 0) {
+                                        Swal.fire(
+                                            'Thành công!',
+                                            'Đã đăng ký thành công, vui lòng đợi quản trị viên kiểm tra các thông tin vừa đăng ký',
+                                            'success'
+                                        )
+                                        submit_func = "add";
+                                        $('#tblAllSong tbody').html('');
+                                        $('#listAllSong').trigger('click');
+                                    } else if (data == -1) {
+                                        Swal.fire(
+                                            'Lỗi gửi thông tin hợp đồng!',
+                                            'Hệ thống đang gặp trục trặc, vui lòng liên hệ admin',
+                                            'warning'
+                                        )
+                                    }
+
+                                },
+                                error: function (xhr) {
+                                    console.log(xhr.responseText);
+                                    alert('Lỗi hệ thống đăng ký, vui lòng liên hệ quản trị viên');
+                                    $('.loader').removeClass("is-active");
+                                    console.log(xhr.responseText);
+                                },
+                            });
+                            submit_func = "add";
+
+                        } else if (result.isDenied) {
+                            //Swal.fire('Đã hủy lệnh đăng ký', '', 'info');
+                            $('.loader').removeClass("is-active");
+                        }
+                        submit_func = "add";
+                    })
+                }
+            }, 'form#frmReg');
+            $(document).on({
+                click: function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    let option_html = "";
+                    let giahan_html = "";
+                    let total = 0;
+                    for (var i = 1; i <= 12; i++) {
+                        let cday = days(i);
+                        total += cday;
+                        option_html += '<option value="' + total + '">' + i + ' tháng</option>';
+                    }
+                    let title = $(this).data('title');
+                    let hide = $(this).data('hide') == "True" ? "disabled='disabled' class='hide'" : "";
+                    let cpid = $(this).data('cpid');
+                    let videoid = $(this).data('id');
+                    let table_html = `
+
+<form id="frmReg">
+<div class="row">
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    <div id="trRelease" class="form-group">
+                        <label for="txtRelease">Video của bạn đã phát hành hay chưa?</label>
+                        <select required id="txtRelease" class="form-control">
+                            <option value="">-- Lựa chọn --</option>
+                            <optgroup label="Đã phát hành">
+                                <option ${hide} value="yes">Đã phát hành và tiếp tục sử dụng</option>
+                                <option value="del">Đã phát hành và xóa video</option>
+                            </optgroup>
+                            <option ${hide} value="no">Chưa phát hành</option>
+                        </select>
+                    </div>
+                    <div id="trTitle" class="form-group">
+                        <label for="txtTitle">Tên bài hát <b style="color:red">(*)</b></label>
+                        <input class="form-control" disabled id="txtTitle" type="text" value="${title}" />
+                        <input id="txtCpid" type="hidden" value="${cpid}" /><input id="txtVideoid" type="hidden" value="${videoid}" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtName">Họ và tên <b style="color:red">(*)</b></label>
+                        <input required id="txtName" type="text" placeholder="Nguyễn Văn A" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtCmt">CMT/CCCD</label>
+                        <input required id="txtCmt" type="text" placeholder="010092837162" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtEmail">Email liên hệ <b style="color:red">(*)</b></label>
+                        <input required id="txtEmail" type="email" placeholder="sample_email@gmail.com" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtAddress">Địa chỉ<b style="color:red">(*)</b></label>
+                        <input required id="txtAddress" type="text" placeholder="Hà Nội" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtPhone">Số điện thoại liên hệ <b style="color:red">(*)</b></label>
+                        <input required id="txtPhone" type="tel" class="form-control" placeholder="0981234567" pattern="[0]{1}[0-9]{9}" />
+                    </div>
+
+                </div>
+                <div class="col-md-8 col-sm-12 col-xs-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="tenkenh" class="form-group">
+                                <label for="txtChannel">Tên kênh <b style="color:red">(*)</b></label>
+                                <input required id="txtChannel" type="text" class="form-control" />
+                            </div>
+                            <div id="linkvideo" class="form-group">
+                                <label for="txtLink">Link video <b style="color:red">(*)</b></label>
+                                <input required id="txtLink" type="url" class="form-control" />
+                            </div>
+                            <div id="linkkenh" class="form-group">
+                                <label for="txtChannelLink">Link kênh <b style="color:red">(*)</b></label>
+                                <input required id="txtChannelLink" type="url" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-6">
+                            <div class="form-group" id="trngayph">
+                                <label id="ngayph" for="txtDate">Ngày video đã phát hành<b style="color:red">(*)</b></label>
+                                <input required id="txtDate" type="date" class="form-control" min="01/01/2010" pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}" />
+                            </div>
+                            <div class="form-group" id="tr_camco">
+                                <label><input type="checkbox" name="cbFlag" id="cbFlag"> Ngày bị gắn cờ</label>
+                                <input disabled id="txtFlag" type="date" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label>Nền tảng phát hành <b style="color:red">(*)</b></label>
+                                <select required id="txtSource" class="form-control">
+                                    <option value="Youtube">Youtube</option>
+                                    <option value="Facebook">Facebook</option>
+                                    <option value="Instagram">Instagram</option>
+                                    <option value="Twitter">Twitter</option>
+                                    <option value="Tiktok">Tiktok</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Hình thức đăng ký <b style="color:red">(*)</b></label>
+                                <select required id="txtPayment" class="form-control">
+                                    <option value="Đóng phí">Đóng phí</option>
+                                </select>
+                                <input style="display:none" id="txtNote" type="text">
+                                <input style="display:none" id="txtState" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group" id="thoigiandk">
+                                <label for="txtTime">Thời gian đăng ký <b style="color:red">(*)</b></label>
+                                <select required id="txtTime" class="form-control">
+                                    <option value="">--Lựa chọn--</option>
+                                    <option value="0.5">6 tháng</option>
+                                    <option value="1">1 năm</option>
+                                    <option value="2">2 năm</option>
+                                    <option value="3">3 năm</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="datestart">
+                                <label>Giá trị hợp đồng từ ngày - đến ngày<b style="color:red">(*)</b></label>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-6 col-md-6">
+                                        <input required id="txtDateStart" type="date" class="form-control" min="01/01/2010" pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}" />
+                                    </div>
+                                    <div class="col-xs-12 col-sm-6 col-md-6">
+                                        <input readonly id="txtDateEnd" type="date" class="form-control" min="01/01/2010" pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+</div>
+<div class="sv_error"></div>
+<hr style="border-color:#ccc;">
+<div class="row">
+                <div class="col col-md-12">
+                     <label style="margin:10px"><i>Yêu cầu nhập đầy đủ thông tin tại các điểm được đánh dấu <img style="width:10px" src="/images/asterisk_red.png" /></i></label>
+                    <div class="btn-group">
+                        <button type="submit" id="btnGiaHan" class="btn btn-success">Đăng ký</button>
+                        <button type="submit" id="btnUpdate" class="btn btn-success" style="display: none;">Cập nhật</button>
+                    </div>
+                </div>
+</div>
+</form>
+
+
+`;
+                    let btn = $(this).html();
+                    console.log(btn);
+                    let funTitle = "Đăng ký";
+                    if (btn == "Cập nhật") {
+                        funTitle = "Cập nhật thông tin";
+                    }
+                    Swal.fire({
+                        title: '<strong>' + funTitle + '</strong>',
+                        type: 'info',
+                        html: table_html,
+                        width: isMobile ? '100%' :'70%',
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        showCloseButton: true,
+                    });
+                    $('form#frmReg #btnUpdate').show();
+                    $('#txtDateStart').val(formatYmd(new Date()));
+                    if (btn != "Cập nhật") {
+                        //$('#txtSource').multiselect({
+                        //    numberDisplayed: 2, inheritClass: true
+                        //});
+                    }
+
+                    $('#txtRelease').trigger('change');
+                    if (btn == "Cập nhật") {
+                        submit_func = "update";
+                        current_reg_id = $(this).data("reg");
+                        $('#btnUpdate').attr("data-reg", current_reg_id);
+                        $.ajax({
+                            url: "/film_register/get?id=" + current_reg_id,
+                            success: function (data) {
+                                if (data.length > 0) {
+                                    let rs = data[0];
+                                    $('#btnGiaHan').remove();
+                                    $('#txtDate').val(rs.date.split('T')[0]);
+                                    $('#txtTime').val(rs.time);
+                                    $('#txtEmail').val(rs.email);
+                                    $('#txtAddress').val(rs.adress);
+                                    $('#txtPhone').val(rs.phone);
+                                    $('#txtSource').val(rs.source);
+                                    $('#txtNote').val(rs.note);
+                                    $('#txtPayment').val(rs.payment);
+                                    $('#txtDateStart').val(rs.date_start);
+                                    $('#txtDateEnd').val(rs.date_end);
+                                    $('#txtName').val(rs.name);
+                                    $('#txtCmt').val(rs.cmt);
+
+                                    $('#txtLink').attr("required", "required");
+                                    $('#txtChannel').attr("required", "required");
+                                    $('#txtChannelLink').attr("required", "required");
+
+                                    $('#txtTime').attr("disabled", true);
+                                    $('#txtRelease').attr("disabled", true);
+                                    $('#txtDate').attr("disabled", true);
+                                    $('#txtEmail').attr("disabled", true);
+                                    $('#txtAddress').attr("disabled", true);
+                                    $('#txtPhone').attr("disabled", true);
+                                    $('#txtName').attr("disabled", true);
+                                    $('#txtCmt').attr("disabled", true);
+                                    $('#txtSource').attr("disabled", true);
+                                    $('#txtNote').attr("disabled", true);
+                                    $('#txtPayment').attr("disabled", true);
+                                    $('#txtDateStart').attr("disabled", true);
+                                    $('#txtDateEnd').attr("disabled", true);
+                                    $('[disabled]').parent().parent().css("display", "none");
+                                    $('#datestart').hide();
+                                }
+                            },
+                            error: function (a) { console.log(a.responseText) }
+                        });
+                    } else {
+                        $('form#frmReg #btnUpdate').hide();
+                    }
+                }
+            }, '#btnReg');
+            function CalcDate() {
+                console.log('change time');
+                //if ($('#txtRelease').val() == 'yes') {
+                //    let tempDate = new Date($('#txtDate').val());
+                //    $('#txtDateStart').val(formatYmd(tempDate));
+                //} else {
+                //    //$('#txtDateStart').val(formatYmd(new Date()));
+                //}
+                let thoigiandk = $('#txtTime').val() * 12;
+                if ($('#txtDateStart').val() == "") { return false; }
+                let ngaybdsd = new Date($('#txtDateStart').val());
+                let ngayhh = ngaybdsd.setMonth(parseInt(ngaybdsd.getMonth()) + parseInt(thoigiandk));
+                if (ngayhh) {
+                    $('#txtDateEnd').val(formatYmd(new Date(ngayhh)));
+                }
+                // Tính thời gian đã sử dụng
+                let date_dasudung = new Date($('#txtDate').val());
+                //var date2 = new Date($('#txtDateStart').val());
+                let date_hientai = new Date();
+                let Difference_In_Time = date_hientai.getTime() - date_dasudung.getTime();
+                let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+                let Difference_In_Months = Difference_In_Time / (1000 * 3600 * 24 * 30);
+                let note = "";
+                let price = 0;
+                debugger;
+                //6
+                if (Difference_In_Days > 0) {
+                    note = `>= ${parseInt(Difference_In_Months)} tháng(${parseInt(Difference_In_Days)} ngày)`;
+                }
+                //6
+                if (Difference_In_Months >= 6 && Difference_In_Months <= 13) {
+                    note = `>= ${parseInt(Difference_In_Months)} tháng(${parseInt(Difference_In_Days)} ngày)`;
+                }
+                //12
+                if (Difference_In_Months >= 12 && Difference_In_Months <= 19) {
+                    note = `>= ${parseInt(Difference_In_Months)} tháng(${parseInt(Difference_In_Days)} ngày)`;
+                }
+                //18
+                if (Difference_In_Months >= 18 && Difference_In_Months <= 25) {
+                    note = `>= ${parseInt(Difference_In_Months)} tháng(${parseInt(Difference_In_Days)} ngày)`;
+                }
+                //24
+                if (Difference_In_Months > 24 && Difference_In_Months <= 37) {
+                    note = `>= ${parseInt(Difference_In_Months)} tháng(${parseInt(Difference_In_Days)} ngày)`;
+                }
+                //36
+                if (Difference_In_Months > 36) {
+                    note = `>= ${parseInt(Difference_In_Months)} tháng(${parseInt(Difference_In_Days)} ngày)`;
+                }
+                $('#txtNote').val(note);
+                if ($('#txtRelease').val() == "del") {
+                    $('#txtNote').val('Xóa video');
+                    $('#txtState').val('Xóa video');
+                }
+                //else if ($('#txtRelease').val() == "yes") {
+                //    $('#txtState').val('Xóa video');
+                //} else {
+                //    $('#txtState').val('Xóa video');
+                //}
+                if ($('#txtRelease').val() == "del") {
+                    if ($('#txtDate').val()) {
+                        if (date_dasudung > date_hientai) {
+                            $('.sv_error').html('<i class="fa fa-exclamation-triangle"></i> Ngày video phát hành phải nhỏ hơn ngày hiện tại');
+                        } else {
+                            $('.sv_error').html('');
+                        }
+                    } else {
+                        $('.sv_error').html('<i class="fa fa-exclamation-triangle"></i> Vui lòng chọn ngày video đã phát hành');
+                    }
+                }
+            }
+            $(document).on({
+                change: function (e) {
+                    CalcDate();
+                }
+            }, '#txtTime');
+            $(document).on({
+                change: function (e) {
+                    CalcDate();
+                    let date = new Date($('#txtDate').val());
+                    let release = new Date($('#txtRelease').val());
+                    let date_start = new Date($('#txtDateStart').val());
+                    let msg_err = "";
+                    if (date_start <= date) {
+                        if (release == "yes") {
+                            msg_err = ' <br /><i class="fa fa-exclamation-triangle"></i> Ngày của giá trị hợp đồng phải nhỏ hơn hoặc bằng ngày video đã phát hành.';
+                        }
+                        else {
+                            msg_err = ' <br /><i class="fa fa-exclamation-triangle"></i> Ngày của giá trị hợp đồng phải nhỏ hơn hoặc bằng ngày mà bạn dự kiến phát hành video.';
+                        }
+                        return false;
+                    }
+                    $('.sv_error').html(msg_err);
+                }
+            }, '#txtDateStart');
+            $(document).on({
+                change: function (e) {
+                    let checkkk = $('#cbFlag').is(':checked');
+                    $("#txtFlag").attr('disabled', !checkkk);
+                }
+            }, '#cbFlag');
+            $(document).on({
+                change: function (e) {
+                    if ($('#txtRelease').val() == "no") {
+                        let date = new Date($('#txtDate').val());
+                        let date_start = new Date($('#txtDateStart').val());
+                        let today = new Date();
+                        console.log(date_start.getMonth());
+                        console.log(date.getMonth());
+                        console.log(date_start.getDate());
+                        console.log(date.getDate());
+                        debugger;
+                        if (date.getMonth() == today.getMonth() && date.getDate() < today.getDate()) {
+                            $('.sv_error').html('<i class="fa fa-exclamation-triangle"></i> Ngày dự kiến phát hành video phải lớn hơn hoặc bằng ngày hiện tại');
+                            return false;
+                        }
+                        else {
+                            $('.sv_error').html('');
+                        }
+                        if (date_start.getMonth() == date.getMonth() && date.getDate() < date_start.getDate()) {
+                            $('.sv_error').html('<i class="fa fa-exclamation-triangle"></i> Ngày dự kiến phát hành video phải lớn hơn hoặc bằng ngày của giá trị hợp đồng');
+                            return false;
+                        }
+                        else {
+                            $('.sv_error').html('');
+                        }
+                        if (date_start.getMonth() > date.getMonth()) {
+                            $('.sv_error').html('<i class="fa fa-exclamation-triangle"></i> Ngày dự kiến phát hành video phải lớn hơn hoặc bằng ngày của giá trị hợp đồng');
+                            return false;
+                        }
+                        else {
+                            $('.sv_error').html('');
+                        }
+                    }
+                    CalcDate();
+                }
+            }, '#txtDate');
+            $('input[type=search]').on('keyup', function () {
+                //tableSong.search('^' + this.value, true, true, true).draw();
+                var searchTerm = this.value;
+                //    regex = '\\b' + searchTerm + '\\b';
+                //console.log(tableSong);
+                //tableSong.rows().search(regex, true, true).draw();
+                tableSong.fnFilter('^' + searchTerm, null, true, true, true, true);
+            });
+        });// End ready
+    </script>
+}

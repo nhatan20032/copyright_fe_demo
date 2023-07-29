@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - copyrights_fe</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/publish.css"/>
+    <link rel="stylesheet" href="~/css/contact.css"/>
+    <link rel="stylesheet" href="~/css/allSong.css"/>
+    <link rel="stylesheet" href="~/css/navbar.css"/>
+    <link rel="stylesheet" href="~/css/login.css"/>
+    <link rel="stylesheet" href="~/css/home.css"/>
+    <link rel="stylesheet" href="~/css/card.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <!-- import thư viện SweetAlert -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.14.0/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.14.0/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+</head>
+
+<body>
+    @Html.Partial("_Header")
+    <main role="main">
+        @RenderBody()
+    </main>
+    @Html.Partial("_Footer")
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/login.js" asp-append-version="true"></script>
+    <script src="~/js/home.js" asp-append-version="true"></script>
+    <script src="~/js/publish.js" asp-append-version="true"></script>
+    <script src="~/js/comm.js"></script>
+    <script src="~/js/navbar.js"></script>
+    <script src="~/js/card.js"></script>
+    <script src="~/js/account/accLogin.js"></script>
+    <script src="~/js/account/account.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+</body>
+</html>

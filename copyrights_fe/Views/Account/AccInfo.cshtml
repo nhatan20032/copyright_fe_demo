@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "Thông tin tài khoản";
+    var user = copyrights_fe.App.Comm.GetUser();
+    var phone = copyrights_fe.App.Comm.GetPhone();
+    var userId = copyrights_fe.App.Comm.GetUserId();
+}
+<style>
+    button[disabled], html input[disabled] {
+        cursor: not-allowed;
+        background: rgb(0 0 0 / 20%);
+    }
+
+    .show_hide_password i {
+        margin: 10px;
+    }
+
+    .show_hide_password .input-group-addon {
+        border: 1px solid #ccc;
+        border-left: none;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+</style>
+<link rel="stylesheet" href="~/css/login.css" />
+<form action="/account/update_info" method="post">
+    @{
+        string username = "", email = "", phone1 = "", fullname = "";
+        if (!string.IsNullOrEmpty(user.email)) { email = user.email; }
+        if (!string.IsNullOrEmpty(user.username)) { username = user.username; }
+        if (!string.IsNullOrEmpty(user.phone)) { phone1 = user.phone; }
+        if (!string.IsNullOrEmpty(user.fullname)) { fullname = user.fullname; }
+    }
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="username" class="fw-bold p-2">Tài khoản</label>
+                <input disabled name="username" id="username" class="form-control" type="text" value="@username" />
+            </div>
+            <div class="form-group">
+                <label for="phone" class="fw-bold p-2">Số điện thoại</label>
+                <input name="phone" id="phone" class="form-control" type="tel" value="@phone" />
+            </div>
+            <div class="form-group">
+                <label for="email" class="fw-bold p-2">Email</label>
+                <input name="email" id="email" class="form-control" type="email" value="@email" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="fullname" class="fw-bold p-2">Họ và tên</label>
+                <input name="fullname" id="fullname" class="form-control" type="text" value="@fullname" />
+            </div>
+            <div class="form-group">
+                <label for="phone" class="fw-bold p-2">Mật khẩu mới</label>
+                <div class="input-group show_hide_password">
+                    <input name="txtpassword" id="txtpassword" class="form-control" type="password" />
+                    <div class="input-group-addon">
+                        <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="btnUpdateInfo" style="color:#fff;"></label>
+                <button style="background-color: orangered; width:100%; margin-top: 17px; color: black" class="btn" type="button" id="btnUpdateInfo">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script src="~/js/account/accLogin.js"></script>
+<script>
+    $("#btnUpdateInfo").click(function () {
+        let user;
+        if ($('#password').val() == "") {
+            user = {
+                fullname: $('#fullname').val(),
+                email: $('#email').val(),
+                username: $('#username').val(),
+                phone: $('#phone').val(),
+            }
+        }
+        else {
+            user = {
+                phone: $('#phone').val(),
+                username: $('#username').val(),
+                fullname: $('#fullname').val(),
+                email: $('#email').val(),
+                password: $('#txtpassword').val(),
+            }
+        }
+        $.ajax({
+            url: '/account/update_info',
+            method: 'get',
+            data: user,
+            success: function (data) {
+                alert(data + ', thông tin của bạn sẽ được cập nhật lại sau khi đăng nhập lại.');
+            },
+            error: function (xhr) { }
+        });
+    });
+    function change_pass() {
+        $('#txtpassword').val('').attr('disabled', false);
+    }
+    function showpass() {
+        var x = document.getElementById("txtpassword");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
+    $(".show_hide_password a").on("click", function (s) {
+        s.preventDefault(), "text" == $(".show_hide_password input").attr("type") ? ($(".show_hide_password input").attr("type", "password"), $(".show_hide_password i").addClass("fa-eye-slash"), $(".show_hide_password i").removeClass("fa-eye")) : "password" == $(".show_hide_password input").attr("type") && ($(".show_hide_password input").attr("type", "text"), $(".show_hide_password i").removeClass("fa-eye-slash"), $(".show_hide_password i").addClass("fa-eye"));
+    });
+</script>
